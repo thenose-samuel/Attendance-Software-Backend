@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const { stringify } = require('nodemon/lib/utils');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const uri = "mongodb+srv://admin:123@attendancemanagement.qdqgmkv.mongodb.net/?retryWrites=true&w=majority";
 const UserSchema = mongoose.model('Users',{userId: String, password: String, personName: String, designation: String},);
