@@ -50,7 +50,7 @@ app.get('/faculties',async(req,res)=> {
   // console.log(List);
 });
 app.post('/createCourse', async (req,res)=> {
-  let newData = new UserSchema({userId:req.body.username,courseCode:req.body.courseCode,personName:req.body.personName,designation:req.body.designation});
+  let newData = new UserSchema({courseCode:req.body.courseCode,courseName:req.body.courseName,faculty:req.body.faculty,students:req.body.students});
   await newData.save().then((result)=> {
     res.json({status:"Successful"})
   }).catch((err)=> {
