@@ -39,12 +39,16 @@ const verifyUser = async (userData) =>  {
 }  
 app.post('/register', async (req,res)=> {
   let newData = new UserSchema({userId:req.body.userId,password:req.body.password,personName:req.body.personName,designation:req.body.designation});
+  var user = await UserSchema.find({userId:req.body.userId})
+  if(user.length) 
+  res.json({status:"User already exists"});
+  else {
   await newData.save().then((result)=> {
     res.json({status:"Successful"})
   }).catch((err)=> {
     res.json({status:"Error"})
   })
-  console.log(newData );
+}
 }); 
 app.get('/students',async(req,res)=> {
   const List= await UserSchema.find({designation:"Student"},'personName userId');
@@ -65,9 +69,9 @@ app.post('/getCourses',async(req,res)=> {
 app.post('/createCourse', async (req,res)=> {
   let newData = new courseTable({courseCode:req.body.courseCode,courseName:req.body.courseName,faculty:req.body.faculty,students:req.body.students});
   await newData.save().then((result)=> {
-    res.json({status:"Success"})
+    res.json({status:"success"})
   }).catch((err)=> {
-    res.json({status:"Failed"})
+    res.json({status:"failed"})
   })
   // console.log(newData);
 }); 
@@ -88,8 +92,8 @@ app.post('/getRegisteredStudents', async(req,res)=> {
 app.post('/addAttendance',async(req,res)=> {
  let newData= new addAttendanceTable({courseCode:req.body.cid,faculty:req.body.facId,date:req.body.date,students:req.body.stuId,remarks:req.body.remarks})
   await newData.save().then((result)=> {
-  res.json({status:"Success"})
+  res.json({status:"success"})
 }).catch((err)=> {
-  res.json({status:"Failed"})
+  res.json({status:"failed"})
 })
 })
