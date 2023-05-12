@@ -1,6 +1,7 @@
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
 const express = require('express');
+const cors = require('cors')
 const { stringify } = require('nodemon/lib/utils');
 const { ListIndexesCursor } = require('mongodb');
 const app = express();
@@ -19,6 +20,7 @@ const courseTable = mongoose.model('Courses', CourseSchema);
 const addAttendanceTable = mongoose.model('Attendance', addAttendanceSchema);
 
 app.use(express.json());
+app.use(cors())
 app.post('/login', async (req, res) => {
   let exist = await verifyUser(req.body);
   res.json({isExist:exist});
