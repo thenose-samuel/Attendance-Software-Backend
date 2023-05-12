@@ -5,17 +5,19 @@ const { stringify } = require('nodemon/lib/utils');
 const { ListIndexesCursor } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
+const studentNameId={};
 
 const uri = "mongodb+srv://admin:123@attendancemanagement.qdqgmkv.mongodb.net/?retryWrites=true&w=majority";
 const UserSchema = mongoose.model('Users',{userId: String, password: String, personName: String, designation: String},);
 const CourseSchema = new mongoose.Schema(
   { courseCode: String, courseName: String, faculty: [String], students: [String]}
 ) 
-const CourseSchem = new mongoose.Schema(
-  { courseCode: String, courseName: String, faculty: [String], students: [String]}
-)
-const studentNameId={};
+const addAttendanceSchema = new mongoose.Schema(
+  { courseCode: String, faculty: String, date:String, students: [String], remarks: String}
+) 
 const courseTable = mongoose.model('Courses', CourseSchema);
+const addAttendanceTable = mongoose.model('Attendance', addAttendanceSchema);
+
 app.use(express.json());
 app.post('/login', async (req, res) => {
   let exist = await verifyUser(req.body);
@@ -43,7 +45,7 @@ app.post('/register', async (req,res)=> {
   console.log(newData );
 }); 
 app.get('/students',async(req,res)=> {
-  const List= await UserSchema.find({designation:"student"},'personName userId');
+  const List= await UserSchema.find({designation:"Student"},'personName userId');
   res.json({List:List});
   // console.log(List);
 }) ;
@@ -61,9 +63,9 @@ app.post('/getCourses',async(req,res)=> {
 app.post('/createCourse', async (req,res)=> {
   let newData = new courseTable({courseCode:req.body.courseCode,courseName:req.body.courseName,faculty:req.body.faculty,students:req.body.students});
   await newData.save().then((result)=> {
-    res.json({status:"Successful"})
+    res.json({status:"Success"})
   }).catch((err)=> {
-    res.json({status:"Error"})
+    res.json({status:"Failed"})
   })
   // console.log(newData);
 }); 
@@ -79,4 +81,13 @@ app.post('/getRegisteredStudents', async(req,res)=> {
     returnData.push({"userId":sId,"personName":studentNameId[sId]});
   }); 
   res.json({returnData:returnData});
+}) 
+
+app.post('/addAttendance',async(req,res)=> {
+ let newData= new addAttendanceTable({courseCode:req.body.cid,faculty:req.body.facId,date:req.body.date,students:req.body.stuId,remarks:req.body.remarks})
+  await newData.save().then((result)=> {
+  res.json({status:"Success"})
+}).catch((err)=> {
+  res.json({status:"Failed"})
+})
 })
