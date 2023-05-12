@@ -51,12 +51,12 @@ app.post('/register', async (req,res)=> {
 }
 }); 
 app.get('/students',async(req,res)=> {
-  const List= await UserSchema.find({designation:"Student"},'personName userId');
+  const List= await UserSchema.find({designation:"student"},'personName userId');
   res.json({List:List});
   // console.log(List);
 }) ;
 app.get('/faculties',async(req,res)=> {
-  const facultyData= await UserSchema.find({designation:"Faculty"},'personName userId');
+  const facultyData= await UserSchema.find({designation:"faculty"},'personName userId');
   res.json({facultyData:facultyData});
   // console.log(List);
 });
@@ -78,7 +78,7 @@ app.post('/createCourse', async (req,res)=> {
 app.post('/getRegisteredStudents', async(req,res)=> {
   const studentData= await courseTable.find({courseCode:req.body.courseCode},'students');
   const sIds = studentData[0].students;
-  const sData= await UserSchema.find({designation:"Student"},'personName userId');
+  const sData= await UserSchema.find({designation:"student"},'personName userId');
   const returnData=[];
   sData.forEach(details => {
      studentNameId[details.userId]=details.personName;
