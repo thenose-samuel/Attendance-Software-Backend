@@ -199,5 +199,10 @@ app.post("/getReport", async (req, res) => {
   if (stu.length == 0) res.json({ status: "student does not exist" });
   else if (cu.length == 0) res.json({ status: "course invalid" });
   else if (re.length == 0) res.json({ status: "not registered" });
-  else res.json({ classesTaken: classTaken, attended: attended });
+  else
+    res.json({
+      classesTaken: classTaken,
+      attended: attended,
+      status: "success",
+    });
 });
