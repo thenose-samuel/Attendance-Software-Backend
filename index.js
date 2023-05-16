@@ -135,19 +135,23 @@ app.post("/getRegisteredStudents", async (req, res) => {
     { courseCode: req.body.courseCode },
     "students"
   );
-  const sIds = studentData[0].students;
-  const sData = await UserSchema.find(
-    { designation: "student" },
-    "personName userId"
-  );
-  const returnData = [];
-  sData.forEach((details) => {
-    studentNameId[details.userId] = details.personName;
-  });
-  sIds.forEach((sId) => {
-    returnData.push({ userId: sId, personName: studentNameId[sId] });
-  });
-  res.json({ returnData: returnData });
+  try {
+    const sIds = studentData[0].students;
+    const sData = await UserSchema.find(
+      { designation: "student" },
+      "personName userId"
+    );
+    const returnData = [];
+    sData.forEach((details) => {
+      studentNameId[details.userId] = details.personName;
+    });
+    sIds.forEach((sId) => {
+      returnData.push({ userId: sId, personName: studentNameId[sId] });
+    });
+    res.json({ returnData: returnData });
+  } catch (e) {
+    res.json({ status: "error" });
+  }
 });
 
 app.post("/addAttendance", async (req, res) => {
