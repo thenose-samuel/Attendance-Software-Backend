@@ -171,3 +171,33 @@ app.post("/addAttendance", async (req, res) => {
       res.json({ status: "failed" });
     });
 });
+
+app.post("/getReport", async (req, res) => {
+  const stu = await UserSchema.find({
+    userId: req.body.sid,
+    designation: "student",
+  });
+
+  const cu = await courseTable.find({ courseCode: req.body.cid });
+
+  const re = await addAttendanceTable.find({
+    courseCode: req.body.cid,
+    students: { $elemMatch: { $eq: req.body.sid } },
+  });
+
+  const classTaken = await addAttendanceTable.find(
+    { courseCode: req.body.cid },
+    "date"
+  );
+  const attended = await addAttendanceTable.find(
+    {
+      courseCode: req.body.cid,
+      students: { $elemMatch: { $eq: req.body.sid } },
+    },
+    "date"
+  );
+  if (stu.length == 0) res.json({ status: "student does not exist" });
+  else if (cu.length == 0) res.json({ status: "course invalid" });
+  else if (re.length == 0) res.json({ status: "not registered" });
+  else res.json({ classesTaken: classTaken, attended: attended });
+});
